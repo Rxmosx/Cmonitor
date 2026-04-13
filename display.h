@@ -8,7 +8,7 @@ void display_reset_color();
 void display_bar(const char *label, double percent, int width);
 void display_render(double cpu, double mem_usage, char* model);
 
-// Cores ANSI
+
 #define COLOR_DEFAULT 0
 #define COLOR_RED     31
 #define COLOR_GREEN   32
