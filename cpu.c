@@ -17,6 +17,28 @@ int read_cpu_stat(cpuStat *s) {
     return 0;
 }
 
+int read_uptime(Uptime *up){ 
+
+    FILE *fp = fopen("/proc/uptime", "r");
+
+    if (!fp) return -1;
+
+    float total_seconds = 0;
+
+    if (fscanf(fp, "%f %*f", &total_seconds) != 1) {
+        fclose(fp);
+        return -1;
+    };
+
+    int seconds = (int)total_seconds;
+
+    up->h = seconds / 3600;
+    up->m = (seconds % 3600) / 60;
+    up->s = seconds % 60;
+
+    return 1;
+}
+
 
 double cpu_usage(cpuStat *prev, cpuStat *curr) {
 
@@ -31,6 +53,7 @@ double cpu_usage(cpuStat *prev, cpuStat *curr) {
 
     long total_diff = curr_total - prev_total;
     long idle_diff = curr_idle - prev_idle;
+
 
     return (total_diff == 0) ? 0.0 : 100.0 * (total_diff - idle_diff) / total_diff;    
 }

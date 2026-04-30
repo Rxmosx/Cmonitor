@@ -61,7 +61,7 @@ int read_processes(ProcessInfo *list, int max_count) {
 
         fclose(f);
         
-        if (p->mem_kb > 0 && p->state == 'R') count++;
+        if (p->mem_kb > 0) count++;
     }
     closedir(dir);
 

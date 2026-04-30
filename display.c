@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "display.h"
+#include "cpu.h"
 #include "proc.h"
 
 void display_clear() {
@@ -88,14 +89,15 @@ void display_processes(int procs, ProcessInfo *list) {
 }
 
 void display_render(double cpu, double mem_usage, char *model, int procs, 
-    ProcessInfo *list, double read_disk, double write_disk) {
+    ProcessInfo *list, double read_disk, double write_disk, Uptime *up) {
 
     fflush(stdout);
     display_clear();
 
 
     display_set_color(1, COLOR_CYAN);
-    printf("\t       === CMONITOR v1.0 ===\n\n");
+    printf("   =========== CMONITOR v1.0 ==========\n");
+    printf("    Uptime: %d:%d:%d\n\n", up->h, up->m, up->s);
     display_reset_color();
 
     display_bar("CPU", cpu, 30, model);
