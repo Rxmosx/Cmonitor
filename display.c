@@ -89,8 +89,7 @@ void display_processes(int procs, ProcessInfo *list) {
     }
 }
 
-void display_render(double cpu, double mem_usage, char *model, int procs, 
-    ProcessInfo *list, double read_disk, double write_disk, Uptime *up, float temp) {
+void display_render(SystemData *data) {
 
     fflush(stdout);
     display_clear();
@@ -99,20 +98,20 @@ void display_render(double cpu, double mem_usage, char *model, int procs,
     display_set_color(1, COLOR_CYAN);
     printf("   =========== CMONITOR v1.0 ==========\n");
     display_reset_color();
-    printf("    Uptime: %02d:%02d:%02d", up->h, up->m, up->s);
-    printf(" | Temp: %02.0f°C\n\n", temp);
+    printf("    Uptime: %02d:%02d:%02d", data->uptime->h, data->uptime->m, data->uptime->s);
+    printf(" | Temp: %02.0f°C\n\n", data->cpu_temp);
 
-    display_bar("CPU", cpu, 30, model);
-    display_bar("MEM", mem_usage, 30, model);
+    display_bar("CPU", data->cpu_usage, 30, data->cpu_model);
+    display_bar("MEM", data->mem_usage, 30, data->cpu_model);
     
     
-    read_disk || write_disk > 1.0 ?     
-        printf("Leitura: %.2f MB/s | Escrita: %.2f MB/s\n", read_disk, write_disk):
-        printf("Leitura: %.2f KB/s | Escrita: %.2f KB/s\n", read_disk * 1024, write_disk * 1024)
+    (data->disk_read_mb > 1.0 || data->disk_write_mb) > 1.0 ?     
+        printf("Leitura: %.2f MB/s | Escrita: %.2f MB/s\n", data->disk_read_mb, data->disk_write_mb):
+        printf("Leitura: %.2f KB/s | Escrita: %.2f KB/s\n", data->disk_read_mb * 1024, data->disk_write_mb * 1024)
     ;
     
 
-    display_processes(procs, list);
+    display_processes(data->proc_count, data->procs);
 
 
     fflush(stdout);

@@ -1,12 +1,10 @@
-typedef struct {
-    long total, free, available, usage;
-} memStats;
+#ifndef MEM_H
+#define MEM_H
 
-typedef struct {
-    long read_sectors, write_sectors;
-} diskStat;
-
+#include "common.h"
 
 int read_mem_stat(memStats *s);
 double mem_usage(memStats *s);
 double read_rate_disk(diskStat *st);
+
+#endif

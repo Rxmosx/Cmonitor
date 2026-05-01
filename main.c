@@ -5,8 +5,8 @@
 #include "funcs.h"
 #include "proc.h"
 #include "mem.h"
+#include "common.h"
 #include "display.h"
-
 
 
 int main() {
@@ -17,51 +17,56 @@ int main() {
     diskStat *disk_curr = malloc(sizeof(diskStat));
     memStats *mps = malloc(sizeof(memStats));
     Uptime *up = malloc(sizeof(Uptime));
-    char *model = cpu_model();
 
+    SystemData *data = malloc(sizeof(SystemData));
 
     read_cpu_stat(cps_prev);
     read_rate_disk(disk_prev);
+    data->cpu_model = cpu_model();
 
 
-    int num_processes = check_processes();
-    ProcessInfo *pi = malloc(sizeof(ProcessInfo) * num_processes + 10);
+    data->proc_count = check_processes();
+    data->procs = malloc(sizeof(ProcessInfo) * (data->proc_count + 5));
 
     while (1) {
         setvbuf(stdout, NULL, _IONBF, 0);
 
         sleep(1);
 
+
         read_mem_stat(mps);
         read_cpu_stat(cps_curr);
         read_rate_disk(disk_curr);
         read_uptime(up);
-        float temp = thermal_stat();
+        data->uptime = up;
+        data->cpu_temp = thermal_stat();
 
-
-        num_processes = check_processes();
-        ProcessInfo *aux = realloc(pi, sizeof(ProcessInfo) * num_processes);
+        int num_processes = check_processes();
+        ProcessInfo *aux = realloc(data->procs, sizeof(ProcessInfo) * num_processes);
 
         if (aux) {
 
-            pi = aux;
+            data->procs = aux;
         } else {
 
-            perror("Erro ao alocar memoria");
+            perror("Error to allocate memory");
+            sleep(1);
+            continue;
         }
 
 
-        double cpUsage = cpu_usage(cps_prev, cps_curr);
-        double memUsage = mem_usage(mps);
-        int procs = read_processes(pi, num_processes);
+        data->cpu_usage = cpu_usage(cps_prev, cps_curr);
+        data->mem_usage = mem_usage(mps);
+        data->proc_count = read_processes(data->procs, num_processes);
+
         long diff_r = disk_curr->read_sectors - disk_prev->read_sectors;
         long diff_w = disk_curr->write_sectors - disk_prev->write_sectors;
-        double read_mb = (diff_r * 512.0) / (1024.0 * 1024.0);
-        double write_mb = (diff_w * 512.0) / (1024.0 * 1024.0);
+        data->disk_read_mb = (diff_r * 512.0) / (1024.0 * 1024.0);
+        data->disk_write_mb = (diff_w * 512.0) / (1024.0 * 1024.0);
         
-        sort_procs(pi, 0, procs - 1);
+        sort_procs(data->procs, 0, num_processes - 1);
 
-        display_render(cpUsage, memUsage, model, procs, pi, read_mb, write_mb, up, temp);
+        display_render(data);
 
 
         *cps_prev = *cps_curr;
@@ -73,10 +78,12 @@ int main() {
 
     free(cps_prev);
     free(cps_curr);
+    free(disk_prev);
+    free(disk_curr);
     free(mps);
-    free(pi);
-    free(model);
+    free(up);
+    free(data->procs);
+    free(data);
 
     return 0;
-
 } 
