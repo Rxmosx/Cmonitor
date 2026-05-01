@@ -99,3 +99,23 @@ int cpu_cores() {
     fclose(fp);
     return 0;
 }
+
+
+float thermal_stat() {
+
+    FILE *fp = fopen("/sys/class/thermal/thermal_zone6/temp", "r");
+
+    if (!fp) return -1;
+
+    float celcious;
+
+    if (fscanf(fp, "%f", &celcious) == 1) {
+        fclose(fp);
+        float temp = celcious / 1000; 
+
+        return temp;
+    };
+
+    fclose(fp);
+    return 0;
+}

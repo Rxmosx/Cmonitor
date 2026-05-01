@@ -89,7 +89,7 @@ void display_processes(int procs, ProcessInfo *list) {
 }
 
 void display_render(double cpu, double mem_usage, char *model, int procs, 
-    ProcessInfo *list, double read_disk, double write_disk, Uptime *up) {
+    ProcessInfo *list, double read_disk, double write_disk, Uptime *up, float temp) {
 
     fflush(stdout);
     display_clear();
@@ -97,8 +97,9 @@ void display_render(double cpu, double mem_usage, char *model, int procs,
 
     display_set_color(1, COLOR_CYAN);
     printf("   =========== CMONITOR v1.0 ==========\n");
-    printf("    Uptime: %d:%d:%d\n\n", up->h, up->m, up->s);
     display_reset_color();
+    printf("    Uptime: %02d:%02d:%02d", up->h, up->m, up->s);
+    printf(" | Temp: %02.0f°C\n\n", temp);
 
     display_bar("CPU", cpu, 30, model);
     display_bar("MEM", mem_usage, 30, model);

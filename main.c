@@ -31,6 +31,7 @@ int main() {
         read_cpu_stat(cps_curr);
         read_rate_disk(disk_curr);
         read_uptime(up);
+        float temp = thermal_stat();
 
         double cpUsage = cpu_usage(cps_prev, cps_curr);
         double memUsage = mem_usage(mps);
@@ -40,7 +41,7 @@ int main() {
         double read_mb = (diff_r * 512.0) / (1024.0 * 1024.0);
         double write_mb = (diff_w * 512.0) / (1024.0 * 1024.0);
         
-        display_render(cpUsage, memUsage, model, procs, pi, read_mb, write_mb, up);
+        display_render(cpUsage, memUsage, model, procs, pi, read_mb, write_mb, up, temp);
 
         *cps_prev = *cps_curr;
         *disk_prev = *disk_curr;

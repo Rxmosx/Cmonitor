@@ -12,7 +12,7 @@ void display_bar(const char *label, double percent,
 void clean_model_name(char *dest, char *str);
 void display_render(double cpu, double mem_usage, 
     char* model, int procs, 
-    ProcessInfo *list, double read_disk, double write_disk, Uptime *up);
+    ProcessInfo *list, double read_disk, double write_disk, Uptime *up, float temp);
 void display_processes(int procs, ProcessInfo *list);
 
 
