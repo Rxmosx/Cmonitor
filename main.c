@@ -14,7 +14,7 @@ int main() {
     diskStat *disk_prev = malloc(sizeof(diskStat));
     diskStat *disk_curr = malloc(sizeof(diskStat));
     memStats *mps = malloc(sizeof(memStats));
-    ProcessInfo *pi = malloc(sizeof(ProcessInfo) * 300);
+    ProcessInfo *pi = malloc(sizeof(ProcessInfo) * 200);
     Uptime *up = malloc(sizeof(Uptime));
     char *model = cpu_model();
 
@@ -35,7 +35,7 @@ int main() {
 
         double cpUsage = cpu_usage(cps_prev, cps_curr);
         double memUsage = mem_usage(mps);
-        int procs = read_processes(pi, 300);
+        int procs = read_processes(pi, 200);
         long diff_r = disk_curr->read_sectors - disk_prev->read_sectors;
         long diff_w = disk_curr->write_sectors - disk_prev->write_sectors;
         double read_mb = (diff_r * 512.0) / (1024.0 * 1024.0);
