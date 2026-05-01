@@ -72,6 +72,7 @@ void display_bar(const char *label, double percent, int width, char *model) {
 void display_processes(int procs, ProcessInfo *list) {
     printf("\n");
     display_set_color(1, COLOR_CYAN);
+    printf("%d Processes\n", procs);
     printf("%-6s %-20s %-10s %s\n", "PID", "NOME", "ESTADO", "MEM (MB)");
     display_reset_color();
 

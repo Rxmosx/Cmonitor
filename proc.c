@@ -12,7 +12,25 @@ int cmp_mem(const void *a, const void *b) {
     return pb->mem_kb - pa->mem_kb;
 }
 
+int check_processes() {
+    DIR *dir = opendir("/proc");
+    struct dirent *entry; 
+    int count = 0;
 
+    if (!dir) return -1; 
+
+    while ((entry = readdir(dir)) != NULL) {
+        
+        if (entry->d_name[0] < '0' || entry->d_name[0] > '9') {
+            continue;
+        }
+        
+        count++;
+    }
+
+    closedir(dir);
+    return count;
+}
 
 int read_processes(ProcessInfo *list, int max_count) {
 
